@@ -1,0 +1,23 @@
+CREATE TABLE clinics (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+
+    code VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+
+    address VARCHAR(500),
+    phone VARCHAR(20),
+    email VARCHAR(255),
+
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    created_at TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id),
+
+    CONSTRAINT uk_clinics_code UNIQUE (code)
+);
