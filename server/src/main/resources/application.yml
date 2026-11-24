@@ -17,8 +17,10 @@ spring:
 
   jpa:
     open-in-view: false
+
     hibernate:
       ddl-auto: validate
+
     properties:
       hibernate:
         format_sql: true
@@ -47,3 +49,22 @@ logging:
   level:
     root: INFO
     com.mediclinic: DEBUG
+
+# Authentication & Authorization
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      expiration: 900000
+
+    refresh-token:
+      expiration: 604800
+
+    cookie:
+      secure: ${COOKIE_SECURE:true}
+
+    allowed-origin: ${APP_ORIGIN:http://127.0.0.1:5173}
+
+  admin:
+    email: ${ADMIN_EMAIL:admin@mediclinic.local}
+    password: ${ADMIN_PASSWORD:}
