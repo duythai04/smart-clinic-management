@@ -1,0 +1,2 @@
+ALTER TABLE patients
+MODIFY COLUMN blood_type VARCHAR(20) NULL;

@@ -47,7 +47,7 @@ public class Patient {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "blood_type", length = 10)
+    @Column(name = "blood_type", length = 20)
     private BloodType bloodType;
 
     @Column(columnDefinition = "TEXT")
