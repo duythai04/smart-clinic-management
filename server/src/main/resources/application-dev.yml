@@ -1,7 +1,22 @@
+# Development Server
 server:
   address: 127.0.0.1
 
+# Development Security
 app:
   security:
     cookie:
       secure: false
+
+# Development Logging
+logging:
+  level:
+    root: INFO
+    com.mediclinic: DEBUG
+
+    # Spring Security
+    org.springframework.security: DEBUG
+
+    # Authentication & Authorization
+    com.mediclinic.security: DEBUG
+    com.mediclinic.auth: DEBUG
