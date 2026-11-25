@@ -1,0 +1,196 @@
+/* =========================================
+   MEDICLINIC LOGIN ANIMATIONS
+========================================= */
+
+/* Xuất hiện từ dưới lên */
+
+@keyframes loginFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Xuất hiện từ bên trái */
+
+@keyframes loginSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Xuất hiện từ bên phải */
+
+@keyframes loginSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Hiệu ứng hình ảnh */
+
+@keyframes loginImageReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+    filter: blur(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Hiệu ứng nổi nhẹ */
+
+@keyframes loginFloating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* Hiệu ứng ánh sáng chạy qua nút */
+
+@keyframes loginShine {
+  from {
+    left: -100%;
+  }
+
+  to {
+    left: 150%;
+  }
+}
+
+/* =========================================
+   ANIMATION CLASSES
+========================================= */
+
+.login-fade-up {
+  animation: loginFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-slide-left {
+  animation: loginSlideLeft 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-slide-right {
+  animation: loginSlideRight 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-image-reveal {
+  animation: loginImageReveal 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-floating {
+  animation: loginFloating 4s ease-in-out infinite;
+}
+
+/* =========================================
+   STAGGER DELAYS
+========================================= */
+
+.login-delay-100 {
+  animation-delay: 100ms;
+}
+
+.login-delay-200 {
+  animation-delay: 200ms;
+}
+
+.login-delay-300 {
+  animation-delay: 300ms;
+}
+
+.login-delay-400 {
+  animation-delay: 400ms;
+}
+
+.login-delay-500 {
+  animation-delay: 500ms;
+}
+
+.login-delay-600 {
+  animation-delay: 600ms;
+}
+
+.login-delay-700 {
+  animation-delay: 700ms;
+}
+
+.login-delay-800 {
+  animation-delay: 800ms;
+}
+
+/* =========================================
+   LOGIN BUTTON SHINE
+========================================= */
+
+.login-button-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button-shine::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 50%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.login-button-shine:hover:not(:disabled)::before {
+  animation: loginShine 0.8s ease;
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .login-fade-up,
+  .login-slide-left,
+  .login-slide-right,
+  .login-image-reveal,
+  .login-floating,
+  .login-button-shine::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}

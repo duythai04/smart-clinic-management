@@ -2,10 +2,17 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
 
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+
+import LoginPage from "../pages/auth/LoginPage";
+import ForbiddenPage from "../pages/auth/ForbiddenPage";
+
 import DashboardPage from "../pages/dashboard/DashboardPage";
 
 import PatientsPage from "../pages/patients/PatientsPage";
 import PatientDetailPage from "../pages/patients/PatientDetailPage";
+
+import { permissions } from "../config/permissions";
 
 function ComingSoon({ title }: { title: string }) {
   return (
@@ -21,59 +28,138 @@ export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* PUBLIC ROUTES */}
 
-          {/* Dashboard */}
-          <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-          {/* Patient Management */}
-          <Route path="/patients" element={<PatientsPage />} />
+        {/* AUTHENTICATED ROUTES */}
 
-          {/* Patient Detail */}
-          <Route path="/patients/:id" element={<PatientDetailPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            {/* DEFAULT ROUTE */}
 
-          {/* Appointment Management */}
-          <Route
-            path="/appointments"
-            element={<ComingSoon title="Quản lý lịch hẹn" />}
-          />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-          {/* Reception */}
-          <Route
-            path="/reception"
-            element={<ComingSoon title="Tiếp đón bệnh nhân" />}
-          />
+            {/* DASHBOARD */}
 
-          {/* Medical Examination */}
-          <Route path="/medical" element={<ComingSoon title="Khám bệnh" />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
 
-          {/* Pharmacy Management */}
-          <Route
-            path="/pharmacy"
-            element={<ComingSoon title="Quản lý nhà thuốc" />}
-          />
+            {/* FORBIDDEN */}
 
-          {/* Laboratory Management */}
-          <Route
-            path="/laboratory"
-            element={<ComingSoon title="Quản lý xét nghiệm" />}
-          />
+            <Route path="/403" element={<ForbiddenPage />} />
 
-          {/* Billing Management */}
-          <Route path="/billing" element={<ComingSoon title="Thanh toán" />} />
+            {/* PATIENT MANAGEMENT */}
 
-          {/* Reports */}
-          <Route path="/reports" element={<ComingSoon title="Báo cáo" />} />
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.patients} />}
+            >
+              <Route path="/patients" element={<PatientsPage />} />
 
-          {/* Settings */}
-          <Route
-            path="/settings"
-            element={<ComingSoon title="Cài đặt hệ thống" />}
-          />
+              <Route path="/patients/:id" element={<PatientDetailPage />} />
+            </Route>
 
-          {/* Fallback Route */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            {/* APPOINTMENT MANAGEMENT */}
+
+            <Route
+              element={
+                <ProtectedRoute allowedRoles={permissions.appointments} />
+              }
+            >
+              <Route
+                path="/appointments"
+                element={<ComingSoon title="Quản lý lịch hẹn" />}
+              />
+            </Route>
+
+            {/* RECEPTION */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.reception} />}
+            >
+              <Route
+                path="/reception"
+                element={<ComingSoon title="Tiếp đón bệnh nhân" />}
+              />
+            </Route>
+
+            {/* MEDICAL EXAMINATION */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.medical} />}
+            >
+              <Route
+                path="/medical"
+                element={<ComingSoon title="Khám bệnh" />}
+              />
+            </Route>
+
+            {/* PHARMACY */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.pharmacy} />}
+            >
+              <Route
+                path="/pharmacy"
+                element={<ComingSoon title="Quản lý nhà thuốc" />}
+              />
+            </Route>
+
+            {/* LABORATORY */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.laboratory} />}
+            >
+              <Route
+                path="/laboratory"
+                element={<ComingSoon title="Quản lý xét nghiệm" />}
+              />
+            </Route>
+
+            {/* BILLING */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.billing} />}
+            >
+              <Route
+                path="/billing"
+                element={<ComingSoon title="Thanh toán" />}
+              />
+            </Route>
+
+            {/* REPORTS */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.reports} />}
+            >
+              <Route path="/reports" element={<ComingSoon title="Báo cáo" />} />
+            </Route>
+
+            {/* USER MANAGEMENT */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.users} />}
+            >
+              <Route
+                path="/users"
+                element={<ComingSoon title="Quản lý nhân viên" />}
+              />
+            </Route>
+
+            {/* SETTINGS */}
+
+            <Route
+              element={<ProtectedRoute allowedRoles={permissions.settings} />}
+            >
+              <Route
+                path="/settings"
+                element={<ComingSoon title="Cài đặt hệ thống" />}
+              />
+            </Route>
+
+            {/* FALLBACK */}
+
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
