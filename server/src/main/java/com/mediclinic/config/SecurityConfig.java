@@ -116,17 +116,28 @@ public class SecurityConfig {
                                 "/api/v1/auth/me"
                         ).authenticated()
 
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/auth/change-password"
+                        ).authenticated()
+
                         .requestMatchers(HttpMethod.GET,
                                 "/api/v1/users",
-                                "/api/v1/users/**"
+                                "/api/v1/users/**",
+                                "/api/v1/roles"
                         ).hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST,
-                                "/api/v1/users"
+                                "/api/v1/users",
+                                "/api/v1/users/*/reset-password"
                         ).hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/v1/roles"
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/v1/users/*",
+                                "/api/v1/users/*/roles"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/v1/users/*/status"
                         ).hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET,

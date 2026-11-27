@@ -1,6 +1,7 @@
 package com.mediclinic.auth.service;
 
 import com.mediclinic.auth.dto.AuthResponse;
+import com.mediclinic.auth.dto.ChangePasswordRequest;
 import com.mediclinic.auth.dto.LoginRequest;
 import com.mediclinic.auth.dto.UserResponse;
 import com.mediclinic.security.JwtService;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -108,6 +110,63 @@ public class AuthService {
                 ));
 
         return UserResponse.from(user);
+    }
+
+    @Transactional
+    public void changePassword(
+            Long userId,
+            ChangePasswordRequest request
+    ) {
+        User user = userRepository.findByIdForUpdate(userId)
+                .filter(User::isActive)
+                .orElseThrow(() -> new BadCredentialsException(
+                        "Tài khoản không hợp lệ"
+                ));
+
+        if (request.currentPassword()
+                .getBytes(StandardCharsets.UTF_8).length > 72) {
+
+            throw new BadCredentialsException(
+                    "Mật khẩu hiện tại không chính xác"
+            );
+        }
+
+        if (!passwordEncoder.matches(
+                request.currentPassword(),
+                user.getPasswordHash()
+        )) {
+            throw new BadCredentialsException(
+                    "Mật khẩu hiện tại không chính xác"
+            );
+        }
+
+        String newPassword = request.newPassword();
+
+        if (newPassword.isBlank() || newPassword.length() < 12) {
+            throw new IllegalArgumentException(
+                    "Mật khẩu phải có ít nhất 12 ký tự"
+            );
+        }
+
+        if (newPassword.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new IllegalArgumentException(
+                    "Mật khẩu không được vượt quá 72 byte"
+            );
+        }
+
+        if (passwordEncoder.matches(
+                newPassword,
+                user.getPasswordHash()
+        )) {
+            throw new IllegalArgumentException(
+                    "Mật khẩu mới phải khác mật khẩu hiện tại"
+            );
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.incrementSessionVersion();
+
+        userRepository.saveAndFlush(user);
     }
 
     public void logout(String refreshToken) {
