@@ -9,9 +9,13 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+
+
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,6 +45,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(error(409, "Dữ liệu bị trùng hoặc không hợp lệ"));
+    }
+
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleConflictException(ConflictException ex) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+
+        body.put("success", false);
+
+        body.put("status", 409);
+
+        body.put("message", ex.getMessage());
+
+        body.put("timestamp", LocalDateTime.now());
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(body);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
