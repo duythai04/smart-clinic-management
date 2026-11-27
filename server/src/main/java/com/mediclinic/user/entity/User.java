@@ -14,25 +14,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(
-        nullable = false,
-        unique = true,
-        length = 150
-    )
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(
-        name = "password_hash",
-        nullable = false,
-        length = 255
-    )
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
-    @Column(
-        name = "full_name",
-        nullable = false,
-        length = 150
-    )
+    @Column(name = "full_name", nullable = false, length = 150)
     private String fullName;
 
     @Column(length = 20)
@@ -41,38 +29,26 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
+    @Column(name = "session_version", nullable = false)
+    private long sessionVersion = 0;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "user_roles",
-
-        joinColumns = @JoinColumn(
-            name = "user_id"
-        ),
-
-        inverseJoinColumns = @JoinColumn(
-            name = "role_id"
-        )
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Column(
-        name = "created_at",
-        nullable = false,
-        updatable = false
-    )
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(
-        name = "updated_at",
-        nullable = false
-    )
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-
         LocalDateTime now = LocalDateTime.now();
-
         createdAt = now;
         updatedAt = now;
     }
@@ -127,6 +103,14 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public long getSessionVersion() {
+        return sessionVersion;
+    }
+
+    public void incrementSessionVersion() {
+        this.sessionVersion++;
     }
 
     public Set<Role> getRoles() {
